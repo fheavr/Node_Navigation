@@ -37,17 +37,21 @@ class Node:
         # iterate to next node
         # if returns false, swap
 
+        leaf_count = 0
         self.active = 1
         for value in self.domain:  # set my state
             self.value = value
             if not self.check_rules():
+                leaf_count += 1
                 print "{0} {1} failure".format(state, self)
                 continue
             elif self.next_node == None:
+                leaf_count += 1
                 print "{0} {1} solution".format(state, self)
             else:
-                self.next_node.iterate("{0} {1}".format(state, self))
+                leaf_count += self.next_node.iterate("{0} {1}".format(state, self))
         self.active = 0
+        return leaf_count
 
 class Rule:
     def __init__(self, node1, node2, operation):
@@ -130,6 +134,8 @@ def Solve():
     rules.append(Rule(D, F, ne))
     rules.append(Rule(E, F, abs_diff_odd))
 
-    A.iterate("")
+    num = A.iterate("")
+
+    print "This node selection results in {} leaf nodes".format(num)
 
 Solve()
